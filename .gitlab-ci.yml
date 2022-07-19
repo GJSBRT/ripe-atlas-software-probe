@@ -154,6 +154,7 @@ build-ci-test-centos8:
     # overwrite with new content
     - cp -rf $LOCAL_REPO_PATH/* $CENTOS_VERSION/
     - rm $CENTOS_VERSION/repodata/*.asc
+    - cd $CENTOS_VERSION/noarch/ && mv ripe-atlas-repo*.noarch.rpm ripe-atlas-repo.noarch.rpm && cd -
 
     # create repo
     - cd $CENTOS_VERSION && createrepo . && cd -
