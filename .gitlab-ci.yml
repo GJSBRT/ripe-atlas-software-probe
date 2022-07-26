@@ -146,10 +146,14 @@ build-ci-test-centos7:
     - cd ${CI_PROJECT_DIR}
   script:
     - tar xvf ${CENTOS_VERSION}-RPM-package.tar
+    - find . | grep -vE '.git|probe-busybox|build-config|bin'
 
     - 'eval ${PREPARE}'
+    - find . | grep -vE '.git|probe-busybox|build-config|bin'
     - 'eval ${FINALIZE}'
+    - find . | grep -vE '.git|probe-busybox|build-config|bin'
     - 'eval ${CLEANUP}'
+    - find . | grep -vE '.git|probe-busybox|build-config|bin'
 
     # generate artifacts for deploy - overwrite previous
     - rm ${CENTOS_VERSION}-RPM-package.tar
