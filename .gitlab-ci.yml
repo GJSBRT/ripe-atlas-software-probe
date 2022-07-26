@@ -1,5 +1,5 @@
 stages:
-  # - docker_image
+  - docker_image
   - build
   - prepare
   # - deploy
@@ -10,25 +10,26 @@ variables:
   # DOCKER_IMAGE_DEBIAN11: ${CI_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/debian11:${CI_COMMIT_REF_SLUG}
   DOCKER_IMAGE_CENTOS7: ${CI_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/centos7:${CI_COMMIT_REF_SLUG}
   # DOCKER_IMAGE_CENTOS8: ${CI_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/centos8:${CI_COMMIT_REF_SLUG}
+  DOCKER_IMAGE_PREP: ${CI_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/prep:${CI_COMMIT_REF_SLUG}
   GIT_SUBMODULE_STRATEGY: recursive
   RPMS_DIR: rpmbuild/RPMS
 
-# .build_image_debian:
-#   stage: docker_image
-#   only:
-#     refs:
-#       - /^devel.*/
-#       - tags
-#     changes:
-#      #  - .gitlab-ci.yml
-#       - ${DOCKER_DIR}/Dockerfile
-#   image: docker:latest
-#   script:
-#     - echo DOCKER_IMAGE ${DOCKER_IMAGE}
-#     - echo DOCKER_DIR ${DOCKER_DIR}
-#     - docker build -t ${DOCKER_IMAGE} ${DOCKER_DIR}
-#     - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
-#     - docker push ${DOCKER_IMAGE}
+.build_image_debian:
+  stage: docker_image
+  only:
+    refs:
+      - /^devel.*/
+      - tags
+    changes:
+     #  - .gitlab-ci.yml
+      - ${DOCKER_DIR}/Dockerfile
+  image: docker:latest
+  script:
+    - echo DOCKER_IMAGE ${DOCKER_IMAGE}
+    - echo DOCKER_DIR ${DOCKER_DIR}
+    - docker build -t ${DOCKER_IMAGE} ${DOCKER_DIR}
+    - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
+    - docker push ${DOCKER_IMAGE}
 
 # build_image_debian9:
 #   variables:
@@ -74,6 +75,12 @@ variables:
 #     DOCKER_DIR: build-config/gitlab-docker/centos8
 #     DOCKER_IMAGE: ${DOCKER_IMAGE_CENTOS8}
 #   extends: .build_image_centos
+
+build-prep:
+  variables:
+    DOCKER_DIR: build-config/gitlab-docker/prep
+    DOCKER_IMAGE: ${DOCKER_IMAGE_PREP}
+  extends: .build_image_debian
 
 # .build-ci-test-debian:
 #   stage: build
@@ -146,7 +153,8 @@ build-ci-test-centos7:
   before_script:
     - cd ${CI_PROJECT_DIR}
   script:
-    - tar xvf ${CENTOS_VERSION}-RPM-package.tar
+    - tar xvf ${CENTOS_VERSION}-RPM-package.tar -C ..
+    - cd ..
     - find . | grep -vE '.git|probe-busybox|build-config|bin'
 
     - 'eval ${PREPARE}'
@@ -172,7 +180,7 @@ prepare-centos7:
     - build-ci-test-centos7
   variables:
     CENTOS_VERSION: centos7
-  image: ${DOCKER_IMAGE_CENTOS7}
+  image: ${DOCKER_IMAGE_PREP}
   extends: .prepare-ci-centos
 
 # .deploy-ci-centos:
