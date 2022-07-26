@@ -162,6 +162,13 @@ build-ci-test-centos7:
     paths:
       - ./*-RPM-package.tar
 
+prepare-centos7:
+  dependencies:
+    - build-ci-test-centos7
+  variables:
+    CENTOS_VERSION: centos7
+  image: ${DOCKER_IMAGE_CENTOS7}
+  extends: .prepare-ci-centos
 
 # .deploy-ci-centos:
 #   stage: deploy
