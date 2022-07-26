@@ -165,7 +165,6 @@ build-ci-test-centos7:
     - find . | grep -vE '.git|probe-busybox|build-config|bin'
 
     # generate artifacts for deploy - overwrite previous
-    - rm ${CENTOS_VERSION}-RPM-package.tar
     - tar cvf ${CENTOS_VERSION}-RPM-package.tar ${RPMS_DIR}/
 
     - cp ${CENTOS_VERSION}-RPM-package.tar ${CI_PROJECT_DIR}/   # hack for gitlab artifacts relative paths
