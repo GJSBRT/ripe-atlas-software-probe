@@ -1,5 +1,5 @@
 stages:
-  # - docker_image
+  - docker_image
   - build
   - prepare
   # - deploy
@@ -48,26 +48,26 @@ variables:
 #     DOCKER_IMAGE: ${DOCKER_IMAGE_DEBIAN11}
 #   extends: .build_image_debian
 
-# .build_image_centos:
-#   stage: docker_image
-#   only:
-#     refs:
-#       - /^devel.*/
-#       - tags
-#     changes:
-#       # - .gitlab-ci.yml
-#       - ${DOCKER_DIR}/Dockerfile
-#   image: docker:latest
-#   script:
-#     - docker build -t ${DOCKER_IMAGE} ${DOCKER_DIR}
-#     - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
-#     - docker push ${DOCKER_IMAGE}
+.build_image_centos:
+  stage: docker_image
+  only:
+    refs:
+      - /^devel.*/
+      - tags
+    changes:
+      # - .gitlab-ci.yml
+      - ${DOCKER_DIR}/Dockerfile
+  image: docker:latest
+  script:
+    - docker build -t ${DOCKER_IMAGE} ${DOCKER_DIR}
+    - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
+    - docker push ${DOCKER_IMAGE}
 
-# build_image_centos7:
-#   variables:
-#     DOCKER_DIR: build-config/gitlab-docker/centos7
-#     DOCKER_IMAGE: ${DOCKER_IMAGE_CENTOS7}
-#   extends: .build_image_centos
+build_image_centos7:
+  variables:
+    DOCKER_DIR: build-config/gitlab-docker/centos7
+    DOCKER_IMAGE: ${DOCKER_IMAGE_CENTOS7}
+  extends: .build_image_centos
 
 # build_image_centos8:
 #   variables:

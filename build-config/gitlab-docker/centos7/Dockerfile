@@ -13,3 +13,4 @@ RUN yum -y install libtool
 RUN yum -y install make
 RUN yum -y install wget.x86_64
 RUN yum -y install createrepo
+RUN yum -y install file
