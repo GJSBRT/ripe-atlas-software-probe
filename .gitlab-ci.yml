@@ -107,6 +107,7 @@ build_image_centos7:
     - /^devel.*/
     - tags
   script:
+    - set
     - cd ..
     - ripe-atlas-software-probe/build-config/centos/bin/cp-repo-files ${CENTOS_VERSION}
     - HOME=${PWD} ripe-atlas-software-probe/build-config/centos/bin/make-tars
